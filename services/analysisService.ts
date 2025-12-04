@@ -102,11 +102,6 @@ export const analyzeWithGemini = async (base64Image: string, mimeType: string) =
   }
 };
 
-/**
- * Calls the custom Flask backend to get a prediction from the PyTorch model.
- * @param imageFile The image file to be analyzed.
- * @returns A promise that resolves to the prediction result.
- */
 export const analyzeWithCustomModel = async (imageFile: File): Promise<{ prediction: string; confidence: number }> => {
   const formData = new FormData();
   formData.append('file', imageFile);
@@ -135,7 +130,6 @@ export const analyzeWithCustomModel = async (imageFile: File): Promise<{ predict
 };
 
 export const getTreatmentRecommendation = async (diseaseType: string, lang: Language): Promise<string> => {
-  // Normalize strings for matching (case/spacing/punctuation/known typos)
   const normalizeKey = (s: string) =>
     (s || '')
       .toLowerCase()
@@ -252,7 +246,7 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
     });
     productMarkdown = renderMarkdown(unique);
   } catch (e) {
-    // ignore and fallback to static mapping
+    // ignore
   }
   if (!productMarkdown) {
     productMarkdown = renderMarkdown(getStaticProducts());
@@ -271,7 +265,7 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
       });
       return response.text.trim();
     } catch (error) {
-      console.error(`Attempt ${i + 1} failed to get treatment recommendation for ${diseaseType}:`, error);
+      console.error(`Attempt ${i + 1} failed:`, error);
       if (i === maxRetries - 1) {
         return "Could not retrieve treatment recommendation at this time due to server overload. Please try again later.";
       }
