@@ -9,7 +9,20 @@ import warnings
 warnings.filterwarnings('ignore')
 
 app = Flask(__name__)
-CORS(app)  # Allow all origins for development
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://kalpavruksha-lake.vercel.app",
+            "https://kalpavruksha-01-krfn.vercel.app",
+            "https://*.vercel.app",  # Allow all Vercel preview URLs
+            "http://localhost:5173",
+            "http://localhost:3000"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Accept"],
+        "supports_credentials": True
+    }
+}) # Allow all origins for development
 
 # --- Model Loading ---
 # Model 1: Detection Model (finds disease regions)
